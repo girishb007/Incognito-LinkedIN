@@ -1,30 +1,34 @@
+from selenium import webdriver
+from bs4 import BeautifulSoup
+import time
 import requests
 from bs4 import BeautifulSoup
 
+def configure_driver():
+    # Add options to make browsing easier
+    options = webdriver.ChromeOptions()
+    options.add_argument('headless')  # Run in background without opening a browser window
+    driver = webdriver.Chrome(executable_path='path/to/chromedriver', options=options)
+    return driver
+
 def scrape_linkedin_profile(username):
-    # Construct the URL for the LinkedIn profile
+    driver = configure_driver()
     url = f"https://www.linkedin.com/in/{username}"
+    driver.get(url)
 
-    # Send an HTTP GET request to the URL
-    response = requests.get(url)
+    # Wait for the page to load completely
+    time.sleep(5)  # This delay might need adjustment
 
-    # Check if the request was successful
-    if response.status_code == 200:
-        # Parse the HTML content
-        soup = BeautifulSoup(response.text, 'html.parser')
-        
-        # Extract data from the HTML
-        # This is where you'll need to find the specific elements containing the data you need
-        # For example:
-        # profile_name = soup.find('...')
-        # experience = soup.find_all('...')
-        # ...
+    soup = BeautifulSoup(driver.page_source, 'html.parser')
+    driver.quit()
 
-        # Return the scraped data
-        return {
-            "name": profile_name,
-            "experience": experience,
-            # Add other relevant data
-        }
-    else:
-        return {"error": "Profile could not be retrieved"}
+    # Extract data from the soup object
+    # Example: Find profile name
+    profile_name = soup.find('...', {'class': '...'})  # Replace with correct tags and classes
+    # Add more extraction logic here
+
+    return {
+        "name": profile_name.get_text(strip=True) if profile_name else 'Not found',
+        # Include other data points
+    }
+
