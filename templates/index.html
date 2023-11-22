@@ -2,14 +2,94 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>LinkedIn Profile Fetcher</title>
+    <title>LinkedIn Profile Mockup</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            background-color: #f3f2ef;
+            font-family: Arial, sans-serif;
+        }
+        .profile-container {
+            background-color: #fff;
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .profile-header {
+            text-align: center;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+        }
+        .profile-header img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+        .profile-header h2 {
+            margin-bottom: 5px;
+        }
+        .profile-section {
+            margin-bottom: 15px;
+        }
+        .profile-section h3 {
+            color: #0073b1;
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Fetch LinkedIn Profile</h1>
-    <form action="/fetch_linkedin" method="post">
-        <label for="username">LinkedIn Username:</label>
-        <input type="text" id="username" name="username" required>
-        <button type="submit">Fetch Profile</button>
-    </form>
+    <div class="container">
+        <h1 class="text-center mt-4">Fetch LinkedIn Profile</h1>
+        <form id="fetchForm" class="mb-3">
+            <div class="form-group">
+                <label for="username">LinkedIn Username:</label>
+                <input type="text" class="form-control" id="username" name="username" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Fetch Profile</button>
+        </form>
+
+        <div id="profileDisplay"></div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $("#fetchForm").on("submit", function(e) {
+                e.preventDefault();
+                var username = $("#username").val();
+                $.post("/fetch_linkedin", {username: username}, function(data) {
+                    displayProfile(data);
+                }).fail(function() {
+                    alert("Error fetching data. Make sure the LinkedIn username is correct and the server is running.");
+                });
+            });
+        });
+
+        function displayProfile(data) {
+            var profileHtml = '<div class="profile-container">' +
+                              '<div class="profile-header">' +
+                              '<img src="' + data.profile_pic_url + '" alt="Profile Picture">' +
+                              '<h2>' + data.full_name + '</h2>' +
+                              '<p>' + data.occupation + '</p>' +
+                              '</div>' +
+                              '<div class="profile-section">' +
+                              '<h3>About</h3>' +
+                              '<p>' + data.summary + '</p>' +
+                              '</div>' +
+                              '<div class="profile-section">' +
+                              '<h3>Experience</h3>';
+                              
+            data.experiences.forEach(function(exp) {
+                profileHtml += '<p><strong>' + exp.title + '</strong> at ' + exp.company + '</p>';
+            });
+
+            profileHtml += '</div></div>';
+
+            $("#profileDisplay").html(profileHtml);
+        }
+    </script>
 </body>
 </html>
