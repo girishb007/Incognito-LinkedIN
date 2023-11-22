@@ -55,6 +55,7 @@
         <div id="profileDisplay"></div>
     </div>
 
+
     <script>
         $(document).ready(function() {
             $("#fetchForm").on("submit", function(e) {
@@ -71,23 +72,96 @@
         function displayProfile(data) {
             var profileHtml = '<div class="profile-container">' +
                               '<div class="profile-header">' +
-                              '<img src="' + data.profile_pic_url + '" alt="Profile Picture">' +
+                                '<img src="' + data.profile_pic_url + '" alt="Profile Picture">' +
                               '<h2>' + data.full_name + '</h2>' +
                               '<p>' + data.occupation + '</p>' +
-                              '</div>' +
-                              '<div class="profile-section">' +
-                              '<h3>About</h3>' +
-                              '<p>' + data.summary + '</p>' +
-                              '</div>' +
-                              '<div class="profile-section">' +
-                              '<h3>Experience</h3>';
-                              
+                              '</div>';
+
+            // Experience section
+            if (Array.isArray(data.experiences)) {
+            profileHtml += '<div class="profile-section"><h3>Experience</h3>';
             data.experiences.forEach(function(exp) {
-                profileHtml += '<p><strong>' + exp.title + '</strong> at ' + exp.company + '</p>';
+                profileHtml += '<p><strong>' + exp.title + '</strong> at ' + exp.company + ' - ' + exp.description + '</p>';
             });
+            profileHtml += '</div>';
+        }
 
-            profileHtml += '</div></div>';
+            // Education section
+            if (Array.isArray(data.education)) {
+            profileHtml += '<div class="profile-section"><h3>Education</h3>';
+            data.education.forEach(function(edu) {
+                profileHtml += '<p><strong>' + edu.school + '</strong>, ' + edu.degree_name + ' - ' + edu.field_of_study + '</p>';
+            });
+            profileHtml += '</div>';
+           }
+           
+            // Licenses & Certifications section
+            if (Array.isArray(data.certifications)) {
+            profileHtml += '<div class="profile-section"><h3>Licenses & Certifications</h3>';
+            // Assuming data.certifications is an array of certification objects
+            data.certifications.forEach(function(cert) {
+                profileHtml += '<p>' + cert.name + '</p>';
+            });
+            profileHtml += '</div>';
+           }
 
+            // Projects section
+            //if (Array.isArray(data.projects)) {
+            profileHtml += '<div class="profile-section"><h3>Projects</h3>';
+            // Assuming data.projects is an array of project objects
+            data.projects.forEach(function(project) {
+                profileHtml += '<p><strong>' + project.name + '</strong> - ' + project.description + '</p>';
+            });
+            profileHtml += '</div>';
+             //}
+
+            // Skills section
+            if (Array.isArray(data.skills)) {
+            profileHtml += '<div class="profile-section"><h3>Skills</h3><ul>';
+            data.skills.forEach(function(skill) {
+                profileHtml += '<li>' + skill + '</li>';
+            });
+            profileHtml += '</ul></div>';
+             }
+
+            // Publications section
+            if (Array.isArray(data.publications)) {
+            profileHtml += '<div class="profile-section"><h3>Publications</h3>';
+            // Assuming data.publications is an array of publication objects
+            data.publications.forEach(function(pub) {
+                profileHtml += '<p><strong>' + pub.title + '</strong> - ' + pub.publisher + '</p>';
+            });
+            profileHtml += '</div>';
+           }
+
+            // Honors & Awards section
+            if (Array.isArray(data.awards)) {
+            profileHtml += '<div class="profile-section"><h3>Honors & Awards</h3>';
+            // Assuming data.awards is an array of award objects
+            data.awards.forEach(function(award) {
+                profileHtml += '<p>' + award.title + '</p>';
+            });
+            profileHtml += '</div>';
+            }
+            // Languages section
+            if (Array.isArray(data.languages)) {
+            profileHtml += '<div class="profile-section"><h3>Languages</h3><ul>';
+            // Assuming data.languages is an array of language objects
+            data.languages.forEach(function(lang) {
+                profileHtml += '<li>' + lang + '</li>';
+            });
+            profileHtml += '</ul></div>';
+            }
+            // Interests section
+            if (Array.isArray(data.interests)) {
+            profileHtml += '<div class="profile-section"><h3>Interests</h3><ul>';
+            // Assuming data.interests is an array of interest strings
+            data.interests.forEach(function(interest) {
+                profileHtml += '<li>' + interest + '</li>';
+            });
+            profileHtml += '</ul></div>';
+              }
+            profileHtml += '</div>'; // Closing profile-container div
             $("#profileDisplay").html(profileHtml);
         }
     </script>

@@ -10,7 +10,7 @@ def index():
 @app.route('/fetch_linkedin', methods=['POST'])
 def fetch_linkedin():
     linkedin_username = request.form['username']
-    api_key = 'XyDnlOXt3vuGIoRpmX1A-w'
+    api_key = 'tWm9eGyKm4bdaaFpV8OZmw'
     headers = {'Authorization': 'Bearer ' + api_key}
     api_endpoint = 'https://nubela.co/proxycurl/api/v2/linkedin'
     linkedin_profile_url = f'https://www.linkedin.com/in/{linkedin_username}/'
