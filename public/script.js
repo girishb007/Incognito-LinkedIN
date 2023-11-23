@@ -2,7 +2,7 @@ document.getElementById('profileForm').addEventListener('submit', function(event
     event.preventDefault();
     const username = document.getElementById('username').value;
 
-    fetch('http://localhost:3009/download-profile', {
+    fetch('http://localhost:3010/download-profile', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
