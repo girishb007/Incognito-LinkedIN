@@ -9,22 +9,6 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
-// app.post('/download-profile', async (req, res) => {
-//     const username = req.body.username;
-//     if (!username) {
-//         return res.status(400).send('Username is required');
-//     }
-//     try {
-//         const pdfBuffer = await generateLinkedInPDF(username);
-//         res.setHeader('Content-Disposition', `attachment; filename=${username}_linkedin_profile.pdf`);
-//         res.setHeader('Content-Type', 'application/pdf');
-//         res.send(pdfBuffer);
-//     } catch (error) {
-//         console.error(error);
-//         res.status(500).send('Error generating PDF');
-//     }
-// });
-
 
 
 async function generateLinkedInPDF(username) {
